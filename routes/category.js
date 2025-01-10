@@ -1,9 +1,9 @@
 /* Importing the express module and creating an instance of it. */
 const express = require("express");
 const app = express.Router();
-const Categoria = require("../models/Categoria"); 
+const Categoria = require("../models/Categoria");
 
-const Subcategoria = require('../models/Subcategoria')
+const Subcategoria = require("../models/Subcategoria");
 const Producto = require("../models/Producto");
 
 const imageController = require("../controller/imageController");
@@ -92,11 +92,18 @@ app.post("/crear", imageController.upload, async (req, res) => {
         msg: "La categoría " + nombre + " ya existe",
       });
     } else {
+      const nombreSlugged = nombre
+        .trim()
+        .toLowerCase()
+        .replace(/\s/g, "-")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
       const nuevaCategoria = await Categoria.create({
         nombre,
+        nombreSlugged,
         imagen: thumb,
         indexViewUp,
-        indexViewDown
+        indexViewDown,
       });
       res.json(nuevaCategoria);
     }
@@ -147,73 +154,6 @@ app.put("/actualizar", imageController.upload, async (req, res) => {
       });
     }
 
-	try {
-		const ifExist = await Categoria.find({
-		  nombre: nombre,
-		  _id: { $ne: id },
-		});
-  
-		if (ifExist.length > 0) {
-		  res.status(500).json({
-			msg: "La categoría " + nombre + " ya existe",
-		  });
-		} else {
-
-      //buscamos el nombre actual de la categoria antes de guardar los cambios
-      const single = await Categoria.findById(id);
-      const oldname = single.nombre;
-      
-		  const updateCategoria = await Categoria.findByIdAndUpdate(
-			id,
-			{
-			  nombre,
-			  imagen:thumb,
-        indexViewUp, 
-        indexViewDown
-			},
-			{ new: true }
-		  );
-
-      //revisamos si cambio el nombre de la categoria
-      if(oldname != nombre){
-        
-
-        //actualizamos el nombre de la categoria en productos que tengan esta categoria
-        await Producto.update(
-          { categoria:oldname },
-          {
-            $set: {
-              categoria: nombre
-            }
-          },
-          { multi: true }
-        )  
-        
-        //actualizamos el nombre de la categoria en subcategorias que tengan esta categoria
-        await Subcategoria.update(
-          { categoria:oldname },
-          {
-            $set: {
-              categoria: nombre
-            }
-          },
-          { multi: true }
-        )  
-      }
-
-
-		  res.json({ updateCategoria });
-		}
-	  } catch (error) {
-		res.status(500).json({
-		  msg: "Hubo un error actualizando la Categoría "+error,
-		});
-	  }
-
-  } else {
-
-
-
     try {
       const ifExist = await Categoria.find({
         nombre: nombre,
@@ -225,46 +165,113 @@ app.put("/actualizar", imageController.upload, async (req, res) => {
           msg: "La categoría " + nombre + " ya existe",
         });
       } else {
-
         //buscamos el nombre actual de la categoria antes de guardar los cambios
         const single = await Categoria.findById(id);
         const oldname = single.nombre;
-        
 
+        const nombreSlugged = nombre
+          .trim()
+          .toLowerCase()
+          .replace(/\s/g, "-")
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
         const updateCategoria = await Categoria.findByIdAndUpdate(
           id,
           {
-            nombre,indexViewUp, indexViewDown
+            nombre,
+            nombreSlugged,
+            imagen: thumb,
+            indexViewUp,
+            indexViewDown,
           },
           { new: true }
         );
 
-
         //revisamos si cambio el nombre de la categoria
-        if(oldname != nombre){
-          
-
+        if (oldname != nombre) {
           //actualizamos el nombre de la categoria en productos que tengan esta categoria
           await Producto.update(
-            { categoria:oldname },
+            { categoria: oldname },
             {
               $set: {
-               categoria: nombre
-              }
+                categoria: nombre,
+                categoriaSlugged: nombreSlugged,
+              },
             },
             { multi: true }
-          )  
-        
+          );
+
           //actualizamos el nombre de la categoria en subcategorias que tengan esta categoria
           await Subcategoria.update(
-            { categoria:oldname },
+            { categoria: oldname },
             {
               $set: {
-                categoria: nombre
-              }
+                categoria: nombre,
+              },
             },
             { multi: true }
-          )  
+          );
+        }
+
+        res.json({ updateCategoria });
+      }
+    } catch (error) {
+      res.status(500).json({
+        msg: "Hubo un error actualizando la Categoría " + error,
+      });
+    }
+  } else {
+    try {
+      const ifExist = await Categoria.find({
+        nombre: nombre,
+        _id: { $ne: id },
+      });
+
+      if (ifExist.length > 0) {
+        res.status(500).json({
+          msg: "La categoría " + nombre + " ya existe",
+        });
+      } else {
+        //buscamos el nombre actual de la categoria antes de guardar los cambios
+        const single = await Categoria.findById(id);
+        const oldname = single.nombre;
+
+        const nombreSlugged = nombre.trim().toLowerCase().replace(/\s/g, "-").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const updateCategoria = await Categoria.findByIdAndUpdate(
+          id,
+          {
+            nombre,
+            nombreSlugged,
+            indexViewUp,
+            indexViewDown,
+          },
+          { new: true }
+        );
+
+        //revisamos si cambio el nombre de la categoria
+        if (oldname != nombre) {
+          //actualizamos el nombre de la categoria en productos que tengan esta categoria
+          await Producto.update(
+            { categoria: oldname },
+            {
+              $set: {
+                categoria: nombre,
+                categoriaSlugged: nombreSlugged,
+              },
+            },
+            { multi: true }
+          );
+
+          //actualizamos el nombre de la categoria en subcategorias que tengan esta categoria
+          await Subcategoria.update(
+            { categoria: oldname },
+            {
+              $set: {
+                categoria: nombre,
+              },
+            },
+            { multi: true }
+          );
         }
 
         res.json({ updateCategoria });

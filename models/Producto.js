@@ -28,6 +28,9 @@ const productSchema = mongoose.Schema(
 			type: String,
 			required: [true,'La categoría es obligatoria']
 		},
+		categoriaSlugged:{
+			type: String,
+		},
 		subcategoria: {
 			type: String
 		},

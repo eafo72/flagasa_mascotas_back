@@ -139,6 +139,9 @@ app.post("/crear", async (req, res) => {
         msg: "El nombre o código del producto ya existe",
       });
     } else {
+
+      const categoriaSlugged = nombre.trim().toLowerCase().replace(/\s/g, "-").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
       const nuevoProducto = await Producto.create({
         codigo,
         nombre,
@@ -146,6 +149,7 @@ app.post("/crear", async (req, res) => {
         genero,
         edad,
         categoria,
+        categoriaSlugged,
         subcategoria,
         marca,
         talla,
@@ -230,6 +234,7 @@ app.put("/actualizar", async (req, res) => {
           msg: "El producto " + nombre + " ya existe",
         });
       } else {
+        const categoriaSlugged = nombre.trim().toLowerCase().replace(/\s/g, "-").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         const updateProducto = await Producto.findByIdAndUpdate(
           id,
           {
@@ -239,6 +244,7 @@ app.put("/actualizar", async (req, res) => {
             genero,
             edad,
             categoria,
+            categoriaSlugged,
             subcategoria,
             marca,
             talla,
@@ -267,6 +273,7 @@ app.put("/actualizar", async (req, res) => {
           msg: "El producto " + nombre + " ya existe",
         });
       } else {
+        const categoriaSlugged = nombre.trim().toLowerCase().replace(/\s/g, "-").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         const updateProducto = await Producto.findByIdAndUpdate(
           id,
           {
@@ -276,6 +283,7 @@ app.put("/actualizar", async (req, res) => {
             genero,
             edad,
             categoria,
+            categoriaSlugged,
             subcategoria,
             marca,
             talla,

@@ -8,6 +8,9 @@ const categorySchema = mongoose.Schema(
 			type: String,
 			required: [true,'El nombre es obligatorio']
 		},
+		nombreSlugged:{
+			type: String
+		},
 		imagen: {
 			type: String,
 			required: true
