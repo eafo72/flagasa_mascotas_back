@@ -140,7 +140,7 @@ app.post("/crear", async (req, res) => {
       });
     } else {
 
-      const categoriaSlugged = nombre.trim().toLowerCase().replace(/\s/g, "-").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const categoriaSlugged = categoria.trim().toLowerCase().replace(/\s/g, "-").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
       const nuevoProducto = await Producto.create({
         codigo,
@@ -234,7 +234,7 @@ app.put("/actualizar", async (req, res) => {
           msg: "El producto " + nombre + " ya existe",
         });
       } else {
-        const categoriaSlugged = nombre.trim().toLowerCase().replace(/\s/g, "-").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const categoriaSlugged = categoria.trim().toLowerCase().replace(/\s/g, "-").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         const updateProducto = await Producto.findByIdAndUpdate(
           id,
           {
@@ -273,7 +273,7 @@ app.put("/actualizar", async (req, res) => {
           msg: "El producto " + nombre + " ya existe",
         });
       } else {
-        const categoriaSlugged = nombre.trim().toLowerCase().replace(/\s/g, "-").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const categoriaSlugged = categoria.trim().toLowerCase().replace(/\s/g, "-").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         const updateProducto = await Producto.findByIdAndUpdate(
           id,
           {
