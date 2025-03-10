@@ -74,6 +74,10 @@ const productSchema = mongoose.Schema(
 			type: String,
 			required: false,
 		}, 
+		orden: {
+			type: Number,
+			required: false,
+		}
 	},
 	{
 		timestamps: true, 

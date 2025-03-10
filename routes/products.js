@@ -88,6 +88,7 @@ app.post("/crear", async (req, res) => {
     precio,
     calificacion,
     link,
+    orden
   } = req.body;
 
   let today = new Date();
@@ -160,6 +161,7 @@ app.post("/crear", async (req, res) => {
         precio,
         calificacion,
         link,
+        orden
       });
       res.json(nuevoProducto);
     }
@@ -191,6 +193,7 @@ app.put("/actualizar", async (req, res) => {
     estatus,
     precio,
     link,
+    orden
   } = req.body;
 
   if (imgbase64 != null) {
@@ -254,6 +257,7 @@ app.put("/actualizar", async (req, res) => {
             estatus,
             precio,
             link,
+            orden
           },
           { new: true }
         );
@@ -292,6 +296,7 @@ app.put("/actualizar", async (req, res) => {
             estatus,
             precio,
             link,
+            orden
           },
           { new: true }
         );
