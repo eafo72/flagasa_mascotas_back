@@ -26,7 +26,7 @@ const companySchema = mongoose.Schema(
 )
 
 // 3. MODELO
-const Empresa = mongoose.model('Empresa', companySchema)
+const Nosotros = mongoose.model('Nosotros', companySchema)
 
 // 4. EXPORTACIÓN
-module.exports = Empresa
+module.exports = Nosotros
