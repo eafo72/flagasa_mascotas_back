@@ -68,9 +68,10 @@ app.put("/actualizar", async (req, res) => {
     imgbase64,
   } = req.body;
 
+  let tituloImage = '';
   if (imgbase64 != null) {
     let file_extension = name.split(".").pop();
-    let tituloImage = `imagen-nosotros.${file_extension}`;
+    tituloImage = `imagen-nosotros.${file_extension}`;
 
     let formdata = new FormData();
     formdata.append("thumb", imgbase64);
@@ -94,10 +95,10 @@ app.put("/actualizar", async (req, res) => {
       });
     }
   }
-
+  let tituloBanner = '';
   if (bannerbase64 != null) {
     let file_extension = bannername.split(".").pop();
-    let tituloBanner = `banner-nosotros.${file_extension}`;
+    tituloBanner = `banner-nosotros.${file_extension}`;
 
     let formdata = new FormData();
     formdata.append("thumb", bannerbase64);
